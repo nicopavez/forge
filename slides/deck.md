@@ -20,10 +20,11 @@ style: |
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
   .row { display: flex; gap: 16px; }
   .col { flex: 1; }
-  table, table tr, table thead, table tbody, table tr:nth-child(even), table tr:nth-child(odd), table th, table td { background-color: #000 !important; color: #ccc !important; }
+  table, table tr, table thead, table tbody, table tr:nth-child(even), table tr:nth-child(odd), table th, table td { background-color: #000 !important; color: #f0f0f0 !important; }
   table { font-size: 0.6em !important; width: auto; border-collapse: collapse; border: none !important; }
-  table th { text-transform: uppercase !important; font-size: 0.85em !important; letter-spacing: 0.08em !important; text-align: left !important; padding: 6px 10px !important; border: none !important; border-bottom: 2px solid #333 !important; color: #999 !important; }
-  table td { padding: 8px 10px !important; border: none !important; border-bottom: 1px solid #1a1a1a !important; vertical-align: top !important; }
+  table th { text-transform: uppercase !important; font-size: 0.85em !important; letter-spacing: 0.08em !important; text-align: left !important; padding: 6px 14px 8px 10px !important; border: none !important; border-bottom: 2px solid var(--accent) !important; color: #bbb !important; }
+  table td { padding: 10px 14px 10px 10px !important; border: none !important; border-bottom: 1px solid #262626 !important; vertical-align: top !important; color: #f0f0f0 !important; }
+  table td:first-child strong { color: var(--accent) !important; font-weight: 600 !important; }
 footer: ''
 ---
 
@@ -151,10 +152,10 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 <table style="margin-top: 16px;">
 <tr><th>Phase</th><th>Duration</th><th>Scope</th></tr>
-<tr><td>0</td><td>4-6 wks</td><td>Scope taxonomy and data model with security and infra</td></tr>
-<tr><td>1</td><td>8-10 wks</td><td>Connect/consent UI, audit log, read + draft tools. Closed beta.</td></tr>
-<tr><td>2</td><td>6-8 wks</td><td>Tag/assign and workflow-trigger tools. Open beta, self-serve.</td></tr>
-<tr><td>3</td><td>GA</td><td>Decide v1.1 auto-send opt-in on measured trust, not a date</td></tr>
+<tr><td><strong>0</strong></td><td>4-6 wks</td><td>Scope taxonomy and data model with security and infra</td></tr>
+<tr><td><strong>1</strong></td><td>8-10 wks</td><td>Connect/consent UI, audit log, read + draft tools. Closed beta.</td></tr>
+<tr><td><strong>2</strong></td><td>6-8 wks</td><td>Tag/assign and workflow-trigger tools. Open beta, self-serve.</td></tr>
+<tr><td><strong>3</strong></td><td>GA</td><td>Decide v1.1 auto-send opt-in on measured trust, not a date</td></tr>
 </table>
 
 ---
@@ -165,10 +166,10 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 <table style="margin-top: 12px;">
 <tr><th>Risk</th><th>Mitigation</th></tr>
-<tr><td>A scoped agent is still a meaningful blast radius</td><td>Team/inbox-level default scopes, per-connection rate limits</td></tr>
-<tr><td>Reps ignore drafts, adoption stalls</td><td>Measure edit-distance and send-rate in beta; make accept faster than writing</td></tr>
-<tr><td>MCP auth patterns still stabilizing industry-wide</td><td>Version the server interface from day one, track the spec's auth working group</td></tr>
-<tr><td>DPAs may not contemplate a third-party agent</td><td>Legal and compliance in Phase 0; developer data-handling attestation</td></tr>
+<tr><td><strong>A scoped agent is still a meaningful blast radius</strong></td><td>Team/inbox-level default scopes, per-connection rate limits</td></tr>
+<tr><td><strong>Reps ignore drafts, adoption stalls</strong></td><td>Measure edit-distance and send-rate in beta; make accept faster than writing</td></tr>
+<tr><td><strong>MCP auth patterns still stabilizing industry-wide</strong></td><td>Version the server interface from day one, track the spec's auth working group</td></tr>
+<tr><td><strong>DPAs may not contemplate a third-party agent</strong></td><td>Legal and compliance in Phase 0; developer data-handling attestation</td></tr>
 </table>
 
 ---
@@ -305,12 +306,12 @@ Writes go through the same command/event pipeline Front already uses for its own
 
 <table style="margin-top: 8px;">
 <tr><th>Step</th><th>Control</th></tr>
-<tr><td>Agent calls an MCP tool over TLS</td><td>Short-lived, token-exchange credential, not a long-lived key</td></tr>
-<tr><td>Edge looks up the connection's stored scopes</td><td>Server-side only; the caller's claim is never trusted</td></tr>
-<tr><td>Scope check gates the call</td><td>Zero tolerance for scope escapes; denials are logged too</td></tr>
-<tr><td>In-scope call reaches Front's existing service</td><td>No second execution path to maintain or drift from</td></tr>
-<tr><td>Service performs the action under its own rules</td><td>e.g. draft only, a workflow already approved</td></tr>
-<tr><td>Every outcome writes one audit entry</td><td>Connection, action, target, time; retained 1+ year</td></tr>
+<tr><td><strong>Agent calls an MCP tool over TLS</strong></td><td>Short-lived, token-exchange credential, not a long-lived key</td></tr>
+<tr><td><strong>Edge looks up the connection's stored scopes</strong></td><td>Server-side only; the caller's claim is never trusted</td></tr>
+<tr><td><strong>Scope check gates the call</strong></td><td>Zero tolerance for scope escapes; denials are logged too</td></tr>
+<tr><td><strong>In-scope call reaches Front's existing service</strong></td><td>No second execution path to maintain or drift from</td></tr>
+<tr><td><strong>Service performs the action under its own rules</strong></td><td>e.g. draft only, a workflow already approved</td></tr>
+<tr><td><strong>Every outcome writes one audit entry</strong></td><td>Connection, action, target, time; retained 1+ year</td></tr>
 </table>
 
 <div style="margin-top: 14px; font-size: 0.62em; color: var(--body);">P95 latency: under 500ms read, under 800ms write. Rate limits by tier: roughly 120/30/20 calls per minute. Revocation reaches every future call in under a minute.</div>
