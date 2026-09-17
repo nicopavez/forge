@@ -4,7 +4,6 @@ version: 0.3
 status: Draft for review
 owner: PM, Developer Platform
 stakeholders: Developer Platform Eng, Security & Compliance, Support Product, Design
-jira-epic: DEVPLAT-XXXX (to be created at kickoff)
 ---
 
 **Related:** [Opportunity brief](01-opportunity-brief.md), [event model](03-event-model.md)
