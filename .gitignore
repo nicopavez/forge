@@ -1,0 +1,5 @@
+.DS_Store
+*.log
+
+# Personal working notes, never for the public repo
+HANDOFF.md

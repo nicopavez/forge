@@ -1,0 +1,28 @@
+All Rights Reserved
+
+Copyright (c) 2026 Nicholas Pavez
+
+All original content in this repository, including but not limited to
+README.md, the contents of docs/, diagrams/, slides/, and mockups/, is
+copyrighted and all rights are reserved. No permission is granted to copy,
+modify, distribute, or create derivative works from this content, in whole
+or in part, without prior written permission from the copyright holder.
+
+This repository is made publicly viewable as a portfolio piece. Viewing does
+not grant any license to reuse its contents.
+
+---
+
+Exception: the contents of .claude/skills/ are third-party work, not covered
+by the copyright above, and remain under their own original licenses:
+
+- .claude/skills/prd-development, .claude/skills/opportunity-solution-tree,
+  .claude/skills/problem-framing-canvas, .claude/skills/jobs-to-be-done, and
+  .claude/skills/proto-persona are licensed under Creative Commons
+  Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) by
+  their original author.
+- .claude/skills/event-modeling and .claude/skills/marp-slides are licensed
+  MIT by their original authors.
+- .claude/skills/wireframe is licensed MIT by its original author.
+
+See .claude/skills/NOTICE.md for full attribution and source links.
