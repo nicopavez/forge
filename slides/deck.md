@@ -219,6 +219,103 @@ Writes go through the same command/event pipeline Front already uses for its own
 
 ---
 
+### Technical implementation
+
+# Three trust zones, one execution path
+
+<div class="card" style="margin-top: 6px; padding: 8px;">
+<svg viewBox="0 0 1160 380" style="width: 100%; height: auto; display: block; max-height: 380px;">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#666"/>
+    </marker>
+    <symbol id="icon-monitor" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1.5"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></g></symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></g></symbol>
+    <symbol id="icon-db" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/></g></symbol>
+    <symbol id="icon-gauge" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><line x1="12" y1="12" x2="15.5" y2="8"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/></g></symbol>
+    <symbol id="icon-server" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="6" rx="1.2"/><rect x="4" y="14" width="16" height="6" rx="1.2"/><circle cx="7.3" cy="7" r="0.9" fill="currentColor" stroke="none"/><circle cx="7.3" cy="17" r="0.9" fill="currentColor" stroke="none"/></g></symbol>
+  </defs>
+
+  <!-- Outside Front -->
+  <rect x="20" y="65" width="190" height="230" rx="8" fill="none" stroke="#555" stroke-width="2"/>
+  <text x="32" y="88" font-size="12" font-weight="600" letter-spacing="1" fill="#888">OUTSIDE FRONT</text>
+  <use href="#icon-monitor" x="95" y="88" width="40" height="40" style="color:#999"/>
+  <text x="115" y="148" font-size="13" font-weight="600" fill="#ddd" text-anchor="middle">External agents</text>
+  <text x="115" y="172" font-size="11" fill="#999" text-anchor="middle">Customer-built copilot</text>
+  <text x="115" y="192" font-size="11" fill="#999" text-anchor="middle">Partner integration</text>
+  <text x="115" y="212" font-size="11" fill="#999" text-anchor="middle">Third-party MCP client</text>
+
+  <!-- Network hop -->
+  <line x1="215" y1="180" x2="378" y2="180" stroke="#666" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text x="296" y="164" font-size="12" fill="#888" text-anchor="middle">MCP over TLS</text>
+  <text x="296" y="198" font-size="9.5" letter-spacing="1" fill="#555" text-anchor="middle">INTERNET</text>
+
+  <!-- Front boundary -->
+  <rect x="400" y="10" width="740" height="340" rx="8" fill="none" stroke="#4f8df9" stroke-width="2.2"/>
+  <text x="414" y="32" font-size="14" font-weight="700" letter-spacing="1" fill="#4f8df9">FRONT</text>
+
+  <!-- Public MCP edge -->
+  <rect x="424" y="50" width="692" height="130" rx="6" fill="#4f8df9" fill-opacity="0.05" stroke="#4f8df9" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="438" y="68" font-size="12" font-weight="600" letter-spacing="0.5" fill="#4f8df9">PUBLIC MCP EDGE &middot; NEW</text>
+
+  <rect x="444" y="82" width="210" height="88" rx="6" fill="#0a0a0a" stroke="#333"/>
+  <use href="#icon-lock" x="535" y="90" width="28" height="28" style="color:#4f8df9"/>
+  <text x="549" y="136" font-size="12" font-weight="600" fill="#eee" text-anchor="middle">OAuth 2.1 + PKCE</text>
+  <text x="549" y="154" font-size="9.5" fill="#888" text-anchor="middle">Short-lived, token exchange</text>
+
+  <rect x="666" y="82" width="222" height="88" rx="6" fill="#0a0a0a" stroke="#333"/>
+  <use href="#icon-db" x="763" y="90" width="28" height="28" style="color:#4f8df9"/>
+  <text x="777" y="130" font-size="12" font-weight="600" fill="#eee" text-anchor="middle">Connection &amp;</text>
+  <text x="777" y="145" font-size="12" font-weight="600" fill="#eee" text-anchor="middle">Scope Store</text>
+  <text x="777" y="163" font-size="9.5" fill="#888" text-anchor="middle">Scope checked every call</text>
+
+  <rect x="900" y="82" width="200" height="88" rx="6" fill="#0a0a0a" stroke="#333"/>
+  <use href="#icon-gauge" x="986" y="90" width="28" height="28" style="color:#4f8df9"/>
+  <text x="1000" y="136" font-size="12" font-weight="600" fill="#eee" text-anchor="middle">Rate Limiter</text>
+  <text x="1000" y="154" font-size="9.5" fill="#888" text-anchor="middle">Per connection</text>
+
+  <!-- Down arrow into internal platform -->
+  <line x1="770" y1="180" x2="770" y2="196" stroke="#666" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="792" y="192" font-size="10" fill="#666">in-scope calls only</text>
+
+  <!-- Internal platform -->
+  <rect x="424" y="196" width="692" height="130" rx="6" fill="#22c55e" fill-opacity="0.05" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <text x="438" y="214" font-size="12" font-weight="600" letter-spacing="0.5" fill="#22c55e">INTERNAL PLATFORM &middot; EXISTING</text>
+
+  <rect x="444" y="228" width="350" height="88" rx="6" fill="#0a0a0a" stroke="#333"/>
+  <use href="#icon-server" x="605" y="236" width="28" height="28" style="color:#22c55e"/>
+  <text x="619" y="282" font-size="12" font-weight="600" fill="#eee" text-anchor="middle">Conversation &amp; Workflow Services</text>
+  <text x="619" y="300" font-size="9.5" fill="#888" text-anchor="middle">Same path Front's UI already uses</text>
+
+  <rect x="814" y="228" width="286" height="88" rx="6" fill="#0a0a0a" stroke="#333"/>
+  <use href="#icon-db" x="943" y="236" width="28" height="28" style="color:#22c55e"/>
+  <text x="957" y="282" font-size="12" font-weight="600" fill="#eee" text-anchor="middle">Audit Log Store</text>
+  <text x="957" y="300" font-size="9.5" fill="#888" text-anchor="middle">Connection, action, target, time</text>
+</svg>
+</div>
+
+<div style="margin-top: 6px; font-size: 0.56em; color: var(--body);">The Connection &amp; Scope Store, rate limiter, and audit log are the genuinely new pieces. Everything inside the internal platform boundary already runs today, and <strong>SendReply</strong> there is issued by a human rep, never by an agent credential.</div>
+
+---
+
+### Access pattern
+
+# Every scoped call, the same six steps
+
+<table style="margin-top: 8px;">
+<tr><th>Step</th><th>Control</th></tr>
+<tr><td>Agent calls an MCP tool over TLS</td><td>Short-lived, token-exchange credential, not a long-lived key</td></tr>
+<tr><td>Edge looks up the connection's stored scopes</td><td>Server-side only; the caller's claim is never trusted</td></tr>
+<tr><td>Scope check gates the call</td><td>Zero tolerance for scope escapes; denials are logged too</td></tr>
+<tr><td>In-scope call reaches Front's existing service</td><td>No second execution path to maintain or drift from</td></tr>
+<tr><td>Service performs the action under its own rules</td><td>e.g. draft only, a workflow already approved</td></tr>
+<tr><td>Every outcome writes one audit entry</td><td>Connection, action, target, time; retained 1+ year</td></tr>
+</table>
+
+<div style="margin-top: 14px; font-size: 0.62em; color: var(--body);">P95 latency: under 500ms read, under 800ms write. Rate limits by tier: roughly 120/30/20 calls per minute. Revocation reaches every future call in under a minute.</div>
+
+---
+
 ### Technical trade-offs
 
 # What I'd work through with engineering
