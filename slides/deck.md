@@ -94,18 +94,30 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 ---
 
-### Explicitly out of scope
+### Out of scope, and non-goals
 
-# What this isn't, on purpose
+# What's deferred, and what's permanent
 
-<div style="font-size: 0.72em; color: var(--body); line-height: 2.1; margin-top: 16px;">
-<span style="color: var(--red);">&#10005;</span> Autonomous send to a customer without human review<br>
-<span style="color: var(--red);">&#10005;</span> Agent-initiated changes to permissions, billing, or account settings<br>
-<span style="color: var(--red);">&#10005;</span> Cross-workspace or cross-tenant access<br>
-<span style="color: var(--red);">&#10005;</span> A general-purpose, unbounded "do anything" agent surface<br>
-<span style="color: var(--red);">&#10005;</span> A non-MCP transport<br>
-<span style="color: var(--red);">&#10005;</span> Front's own first-party AI features, a separate initiative
+<div class="row" style="margin-top: 16px;">
+  <div class="col card">
+    <div style="color: var(--yellow); font-weight: 600; font-size: 0.8em;">Not now (deferred)</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px; line-height: 1.8;">
+    Autonomous send<br>
+    Partner marketplace or directory<br>
+    SDKs beyond raw MCP tool calls
+    </div>
+  </div>
+  <div class="col card">
+    <div style="color: var(--red); font-weight: 600; font-size: 0.8em;">Not ever (non-goals)</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px; line-height: 1.8;">
+    Self-expanding scopes<br>
+    Cross-workspace or cross-tenant access<br>
+    A non-MCP transport
+    </div>
+  </div>
 </div>
+
+<div style="margin-top: 16px; font-size: 0.6em; color: var(--muted);">Each deferred item has a real revisit trigger tied to beta data, not a fixed date. Non-goals would undermine the safety model itself, not just add scope to it.</div>
 
 ---
 
@@ -162,20 +174,26 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 ### Success metrics
 
-# Adoption isn't enough, it has to be useful
+# Four, matching the brief's own categories
 
 <div class="row" style="margin-top: 16px;">
   <div class="col card">
     <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Adoption</div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">Connections created per week. % of eligible customers within 90 days.</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">30% of API-plan workspaces create a connection within 90 days of GA.</div>
   </div>
   <div class="col card">
     <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Time to first integration</div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">Median time from credentials to first successful sandbox call.</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">Median under 30 minutes, credentials to first sandbox tool call.</div>
+  </div>
+</div>
+<div class="row" style="margin-top: 16px;">
+  <div class="col card">
+    <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Developer satisfaction</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">8/10+ on scope-model clarity in the post-beta survey.</div>
   </div>
   <div class="col card">
-    <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Outcome</div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">% of drafts sent with minimal edits. Change in handle time vs. control.</div>
+    <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Reliability</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">99.9% MCP server availability, P95 tool-call latency under 500ms.</div>
   </div>
 </div>
 

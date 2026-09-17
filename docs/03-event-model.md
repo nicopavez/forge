@@ -1,51 +1,40 @@
 # Event model: external agent access to Front
 
 This is the mechanism behind the PRD's core safety claim: an agent can read and draft,
-but only a human sends. It also shows where an agent connection gets its scope, and
-where every scoped action gets logged. Full diagram: [`../diagrams/event-model.svg`](../diagrams/event-model.svg),
+but only a human sends. Full diagram: [`../diagrams/event-model.svg`](../diagrams/event-model.svg),
 source: [`../diagrams/event-model.json`](../diagrams/event-model.json).
 
 ## How to read it
 
-Four chapters, left to right:
+Three chapters, left to right:
 
-**Connect an Agent.** An admin creates a connection with a name and a fixed set of
-scopes (`read_conversations`, `draft_reply`, etc). That's the only place scopes get
-set. Revoking a connection is immediate and shows up in the same summary view the
-admin used to grant it.
+**Connect & Scope.** An admin creates a connection with a name and a fixed set of
+scopes. That's the only place scopes get set. Revoking a connection takes effect
+immediately.
 
-**Agent Reads Context.** The agent calls an MCP tool to read a conversation. This is
-the lowest-risk surface and the one most agents will use most: it's how an agent
-gets enough context to be useful before it drafts or acts on anything.
+**Agent Reads & Drafts.** The agent reads conversation context, then can draft a
+reply. Both require the matching scope. A draft is never a message the customer
+sees, it's a `ReplyDrafted` event, nothing more.
 
-**Draft, Review, Send.** This is the slice that matters most. The agent's `draft_reply`
-call produces a `ReplyDrafted` event, never a sent message. A rep sees the draft
-through the normal conversation view and issues `SendReply` themselves, whether they
-send it untouched or rewrite it. `SendReply` is the only command in the whole model
-that can produce a message the customer sees, and only a human can issue it. That's
-the human-in-the-loop control point the PRD relies on for v1, and it's a single,
-auditable choke point rather than a UI convention that could be bypassed.
-
-**Audit.** Every scoped action an agent takes produces an audit entry an admin can
-see. The diagram models this for one action (a draft); the same pattern (automation
-triggered by the action's event, logging connection, action type, target, and time)
-applies to every other scoped action as they're added.
+**Human Sends, Everything Logs.** A rep reviews the draft and issues `SendReply`
+themselves, whether they send it untouched or rewrite it first. That's the only
+command in the whole model that can put a message in front of the customer, and no
+agent connection can ever issue it. Every action on this timeline, connect, revoke,
+draft, send, produces one audit entry an admin can see.
 
 ## What this rules out by construction
 
-An agent's credentials never appear anywhere near the `SendReply` command. There's no
-scope, no flag, no config value that lets an agent connection reach it. Adding
-autonomous send later means adding a new command and a new scope the model doesn't
-have today, not flipping a switch on this one. That's deliberate: it makes the v1
-non-goal (no autonomous send) something the architecture enforces, not something a
-policy document asks people to respect.
+An agent's credentials never appear anywhere near `SendReply`. There's no scope, no
+flag, no config value that lets an agent connection reach it. Adding autonomous send
+later means adding a new command the model doesn't have today, not flipping a switch
+on this one. That's what makes the v1 non-goal (no autonomous send) something the
+architecture enforces, not something a policy document asks people to respect.
 
-## Where this stays honest about what's unmodeled
+## What's simplified here on purpose
 
-`ConversationContext`, the read model an agent queries for conversation history, is
-built by Front's existing conversation system, not by anything in this model. Scope
-checks (does this connection's stored scopes include `draft_reply`?) happen before a
-call reaches the slices shown here; they're an authorization concern that sits in
-front of the model, not a domain event in it. Both are called out as notes on the
-relevant slices rather than modeled as if they were new domain concepts, since they
-aren't.
+This diagram is built for a walkthrough with PMs and a tech lead, not as an
+engineering spec. It drops the field-level detail, test cases, and read-model
+projections a build-ready version would carry, keeping only the actors, the
+commands and events, and the one control point the PRD's thesis depends on. Triage
+and workflow-trigger (UC-03, UC-04) follow this same pattern and aren't modeled
+separately here, see the PRD's [use cases](02-prd.md#use-cases) for both.

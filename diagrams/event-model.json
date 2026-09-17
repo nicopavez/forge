@@ -1,5 +1,6 @@
 {
   "name": "External Agent Access to Front",
+  "description": "The mechanism behind one claim: an agent can read and draft, only a human can send.",
   "actors": [
     { "id": "admin", "name": "Workspace Admin", "type": "user" },
     { "id": "support_rep", "name": "Support Rep", "type": "user" },
@@ -13,177 +14,66 @@
   ],
   "chapters": [
     {
-      "name": "Connect an Agent",
+      "name": "Connect & Scope",
       "slices": [
         {
-          "name": "Create Agent Connection",
+          "name": "Admin Creates a Connection",
           "actor": "admin",
           "aggregate": "agent_connection",
-          "ui": "POST /v1/agent-connections",
-          "command": "CreateAgentConnection(workspaceId, name, scopes, createdBy)",
-          "events": ["AgentConnectionCreated(connectionId, workspaceId, name, scopes, createdBy)"],
-          "mapping": {
-            "AgentConnectionCreated": { "connectionId": { "value": "server-generated id" } }
-          },
-          "tests": [
-            {
-              "name": "Admin connects an agent with read and draft scopes",
-              "given": [],
-              "when": "CreateAgentConnection(workspaceId=ws-1, name=Triage Copilot, scopes=[read_conversations, draft_reply], createdBy=admin-1)",
-              "then": ["AgentConnectionCreated(connectionId=conn-1, workspaceId=ws-1, name=Triage Copilot, scopes=[read_conversations, draft_reply], createdBy=admin-1)"]
-            }
-          ]
+          "command": "CreateAgentConnection",
+          "events": ["AgentConnectionCreated"],
+          "note": "Admin names the connection and picks its scopes. This is the only place scopes get set."
         },
         {
-          "name": "Project Connection Summary",
-          "actor": "system",
-          "aggregate": "agent_connection",
-          "trigger": ["AgentConnectionCreated(connectionId, workspaceId, name, scopes, createdBy)", "AgentConnectionRevoked(connectionId, revokedBy)"],
-          "read_models": ["AgentConnectionSummary*(*workspaceId, connectionId, name, scopes, status, revokedBy)"],
-          "mapping": {
-            "AgentConnectionCreated": { "status": { "value": "active" } },
-            "AgentConnectionRevoked": { "status": { "value": "revoked" } }
-          }
-        },
-        {
-          "name": "View Agent Connections",
+          "name": "Admin Revokes a Connection",
           "actor": "admin",
           "aggregate": "agent_connection",
-          "ui": "GET /v1/agent-connections",
-          "read_models": ["AgentConnectionSummary*(*workspaceId, connectionId, name, scopes, status, revokedBy)"],
-          "note": "Status and scopes shown here are what the admin's kill switch and any support/security review acts on."
-        },
-        {
-          "name": "Revoke Agent Connection",
-          "actor": "admin",
-          "aggregate": "agent_connection",
-          "ui": "POST /v1/agent-connections/{connectionId}/revoke",
-          "command": "RevokeAgentConnection(connectionId, revokedBy)",
-          "events": ["AgentConnectionRevoked(connectionId, revokedBy)"],
-          "tests": [
-            {
-              "name": "Admin revokes a connection immediately",
-              "given": ["AgentConnectionCreated(connectionId=conn-1, workspaceId=ws-1, name=Triage Copilot, scopes=[read_conversations, draft_reply], createdBy=admin-1)"],
-              "when": "RevokeAgentConnection(connectionId=conn-1, revokedBy=admin-1)",
-              "then": ["AgentConnectionRevoked(connectionId=conn-1, revokedBy=admin-1)"]
-            }
-          ]
+          "command": "RevokeAgentConnection",
+          "events": ["AgentConnectionRevoked"],
+          "note": "Immediate. Every call from that connection is denied from this point on."
         }
       ]
     },
     {
-      "name": "Agent Reads Context",
+      "name": "Agent Reads & Drafts",
       "slices": [
         {
           "name": "Agent Reads Conversation",
           "actor": "agent",
           "aggregate": "conversation",
-          "ui": "MCP tool: get_conversation",
-          "read_models": ["ConversationContext(conversationId, subject, messages, customerId)"],
-          "note": "Authorized against the calling connection's stored scopes from AgentConnectionSummary before the read reaches this read model. ConversationContext itself is projected by Front's existing conversation system, out of scope for this model."
-        }
-      ]
-    },
-    {
-      "name": "Draft, Review, Send",
-      "slices": [
+          "read_models": ["ConversationContext"],
+          "note": "Requires read scope. No state change."
+        },
         {
-          "name": "Agent Drafts Reply",
+          "name": "Agent Drafts a Reply",
           "actor": "agent",
           "aggregate": "conversation",
-          "ui": "MCP tool: draft_reply",
-          "command": "DraftReply(conversationId, connectionId, bodyText)",
-          "events": ["ReplyDrafted(conversationId, draftId, connectionId, bodyText, draftedAt)"],
-          "mapping": {
-            "ReplyDrafted": {
-              "draftId": { "value": "server-generated id" },
-              "draftedAt": { "value": "server-assigned timestamp" }
-            }
-          },
-          "note": "Requires the draft_reply scope on the calling connection, checked against AgentConnectionSummary.",
-          "tests": [
-            {
-              "name": "Agent drafts a reply for an open conversation",
-              "given": [],
-              "when": "DraftReply(conversationId=conv-9, connectionId=conn-1, bodyText=Thanks for reaching out, checking on this now.)",
-              "then": ["ReplyDrafted(conversationId=conv-9, draftId=draft-1, connectionId=conn-1, bodyText=Thanks for reaching out, checking on this now., draftedAt=2026-09-17T10:00:00Z)"]
-            }
-          ]
-        },
-        {
-          "name": "Project Draft Status",
-          "actor": "system",
-          "aggregate": "conversation",
-          "trigger": ["ReplyDrafted(conversationId, draftId, connectionId, bodyText, draftedAt)", "ReplySent(conversationId, draftId, finalText, sentBy, sentAt)"],
-          "read_models": ["ConversationDraft(conversationId, draftId, bodyText, connectionId, draftedAt, status, finalText, sentBy, sentAt)"],
-          "mapping": {
-            "ReplyDrafted": { "status": { "value": "drafted" } },
-            "ReplySent": { "status": { "value": "sent" } }
-          }
-        },
-        {
-          "name": "Rep Views Draft",
-          "actor": "support_rep",
-          "aggregate": "conversation",
-          "ui": "GET /v1/conversations/{conversationId}",
-          "read_models": ["ConversationDraft(conversationId, draftId, bodyText, connectionId, draftedAt, status, finalText, sentBy, sentAt)"]
-        },
-        {
-          "name": "Rep Sends Reply",
-          "actor": "support_rep",
-          "aggregate": "conversation",
-          "ui": "POST /v1/conversations/{conversationId}/send",
-          "command": "SendReply(conversationId, draftId, finalText, sentBy)",
-          "events": ["ReplySent(conversationId, draftId, finalText, sentBy, sentAt)"],
-          "mapping": {
-            "ReplySent": { "sentAt": { "value": "server-assigned timestamp" } }
-          },
-          "note": "The agent never sends to the customer directly. Every send is this command, issued by a human rep, whether the text is untouched or fully rewritten.",
-          "tests": [
-            {
-              "name": "Rep sends the drafted reply unedited",
-              "given": ["ReplyDrafted(conversationId=conv-9, draftId=draft-1, connectionId=conn-1, bodyText=Thanks for reaching out, checking on this now., draftedAt=2026-09-17T10:00:00Z)"],
-              "when": "SendReply(conversationId=conv-9, draftId=draft-1, finalText=Thanks for reaching out, checking on this now., sentBy=rep-4)",
-              "then": ["ReplySent(conversationId=conv-9, draftId=draft-1, finalText=Thanks for reaching out, checking on this now., sentBy=rep-4, sentAt=2026-09-17T10:02:00Z)"]
-            }
-          ]
+          "command": "DraftReply",
+          "events": ["ReplyDrafted"],
+          "note": "Requires draft scope. Produces a draft only, never a message the customer sees."
         }
       ]
     },
     {
-      "name": "Audit",
+      "name": "Human Sends, Everything Logs",
       "slices": [
         {
-          "name": "Log Agent Action",
+          "name": "Rep Reviews and Sends",
+          "actor": "support_rep",
+          "aggregate": "conversation",
+          "command": "SendReply",
+          "events": ["ReplySent"],
+          "note": "The only command that reaches the customer. No agent connection can issue it."
+        },
+        {
+          "name": "Every Scoped Action Is Logged",
           "actor": "system",
+          "aggregate": "audit",
           "automation": "AgentActionAuditor",
-          "aggregate": "audit",
-          "trigger": "ReplyDrafted(conversationId, draftId, connectionId, bodyText, draftedAt)",
-          "command": "LogAuditEntry(connectionId, conversationId, draftedAt)",
-          "events": ["AuditEntryLogged(connectionId, entryId, action, targetId, occurredAt)"],
-          "mapping": {
-            "AuditEntryLogged": {
-              "action": { "value": "draft_reply" },
-              "targetId": { "from": "conversationId" },
-              "occurredAt": { "from": "draftedAt" },
-              "entryId": { "count": true }
-            }
-          },
-          "note": "Every scoped agent action gets one audit entry, not just drafts; this slice shows the pattern for one action type."
-        },
-        {
-          "name": "Project Audit Entries",
-          "actor": "system",
-          "aggregate": "audit",
-          "trigger": "AuditEntryLogged(connectionId, entryId, action, targetId, occurredAt)",
-          "read_models": ["AuditEntry*(*connectionId, entryId, action, targetId, occurredAt)"]
-        },
-        {
-          "name": "Admin Views Audit Log",
-          "actor": "admin",
-          "aggregate": "audit",
-          "ui": "GET /v1/audit-log",
-          "read_models": ["AuditEntry*(*connectionId, entryId, action, targetId, occurredAt)"]
+          "trigger": ["AgentConnectionCreated", "AgentConnectionRevoked", "ReplyDrafted", "ReplySent"],
+          "events": ["AuditEntryLogged"],
+          "read_models": ["AuditEntry"],
+          "note": "Admin sees connection, action, target, and time for every entry."
         }
       ]
     }

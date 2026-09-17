@@ -166,16 +166,27 @@ table th { color: var(--muted); text-transform: uppercase; font-size: 0.85em; le
 table td { color: var(--body); padding: 8px 10px; border-bottom: 1px solid #111; vertical-align: top; }
 " lang="en-US" data-marpit-pagination="5" style="--paginate:true;--theme:default;--style:@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&amp;family=Raleway:wght@100;200;300;400&amp;display=swap')
 ;" data-marpit-pagination-total="12">
-<h3 id="explicitly-out-of-scope">Explicitly out of scope</h3>
-<h1 id="what-this-isnt-on-purpose">What this isn't, on purpose</h1>
-<div style="font-size: 0.72em; color: var(--body); line-height: 2.1; margin-top: 16px;">
-<span style="color: var(--red);">&#10005;</span> Autonomous send to a customer without human review<br />
-<span style="color: var(--red);">&#10005;</span> Agent-initiated changes to permissions, billing, or account settings<br />
-<span style="color: var(--red);">&#10005;</span> Cross-workspace or cross-tenant access<br />
-<span style="color: var(--red);">&#10005;</span> A general-purpose, unbounded "do anything" agent surface<br />
-<span style="color: var(--red);">&#10005;</span> A non-MCP transport<br />
-<span style="color: var(--red);">&#10005;</span> Front's own first-party AI features, a separate initiative
+<h3 id="out-of-scope-and-non-goals">Out of scope, and non-goals</h3>
+<h1 id="whats-deferred-and-whats-permanent">What's deferred, and what's permanent</h1>
+<div class="row" style="margin-top: 16px;">
+  <div class="col card">
+    <div style="color: var(--yellow); font-weight: 600; font-size: 0.8em;">Not now (deferred)</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px; line-height: 1.8;">
+    Autonomous send<br />
+    Partner marketplace or directory<br />
+    SDKs beyond raw MCP tool calls
+    </div>
+  </div>
+  <div class="col card">
+    <div style="color: var(--red); font-weight: 600; font-size: 0.8em;">Not ever (non-goals)</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px; line-height: 1.8;">
+    Self-expanding scopes<br />
+    Cross-workspace or cross-tenant access<br />
+    A non-MCP transport
+    </div>
+  </div>
 </div>
+<div style="margin-top: 16px; font-size: 0.6em; color: var(--muted);">Each deferred item has a real revisit trigger tied to beta data, not a fixed date. Non-goals would undermine the safety model itself, not just add scope to it.</div>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="6" data-paginate="true" data-theme="default" data-style="@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&amp;family=Raleway:wght@100;200;300;400&amp;display=swap');
 :root {
@@ -305,19 +316,25 @@ table td { color: var(--body); padding: 8px 10px; border-bottom: 1px solid #111;
 " lang="en-US" data-marpit-pagination="9" style="--paginate:true;--theme:default;--style:@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&amp;family=Raleway:wght@100;200;300;400&amp;display=swap')
 ;" data-marpit-pagination-total="12">
 <h3 id="success-metrics">Success metrics</h3>
-<h1 id="adoption-isnt-enough-it-has-to-be-useful">Adoption isn't enough, it has to be useful</h1>
+<h1 id="four-matching-the-briefs-own-categories">Four, matching the brief's own categories</h1>
 <div class="row" style="margin-top: 16px;">
   <div class="col card">
     <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Adoption</div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">Connections created per week. % of eligible customers within 90 days.</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">30% of API-plan workspaces create a connection within 90 days of GA.</div>
   </div>
   <div class="col card">
     <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Time to first integration</div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">Median time from credentials to first successful sandbox call.</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">Median under 30 minutes, credentials to first sandbox tool call.</div>
+  </div>
+</div>
+<div class="row" style="margin-top: 16px;">
+  <div class="col card">
+    <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Developer satisfaction</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">8/10+ on scope-model clarity in the post-beta survey.</div>
   </div>
   <div class="col card">
-    <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Outcome</div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">% of drafts sent with minimal edits. Change in handle time vs. control.</div>
+    <div style="color: var(--accent); font-size: 0.6em; font-weight: 600; text-transform: uppercase;">Reliability</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 8px;">99.9% MCP server availability, P95 tool-call latency under 500ms.</div>
   </div>
 </div>
 </section>
