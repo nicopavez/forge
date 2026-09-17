@@ -20,9 +20,10 @@ style: |
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
   .row { display: flex; gap: 16px; }
   .col { flex: 1; }
-  table { font-size: 0.6em; width: 100%; border-collapse: collapse; }
-  table th { color: var(--muted); text-transform: uppercase; font-size: 0.85em; letter-spacing: 0.08em; text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); }
-  table td { color: var(--body); padding: 8px 10px; border-bottom: 1px solid #111; vertical-align: top; }
+  table, table tr, table thead, table tbody, table tr:nth-child(even), table tr:nth-child(odd), table th, table td { background-color: #000 !important; color: #ccc !important; }
+  table { font-size: 0.6em !important; width: auto; border-collapse: collapse; border: none !important; }
+  table th { text-transform: uppercase !important; font-size: 0.85em !important; letter-spacing: 0.08em !important; text-align: left !important; padding: 6px 10px !important; border: none !important; border-bottom: 2px solid #333 !important; color: #999 !important; }
+  table td { padding: 8px 10px !important; border: none !important; border-bottom: 1px solid #1a1a1a !important; vertical-align: top !important; }
 footer: ''
 ---
 
