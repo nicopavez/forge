@@ -89,13 +89,34 @@ That has three consequences:
 Every customer asking to connect an agent today either accepts that coupling or
 waits.
 
+## Inputs and data points
+
+What I'd want before committing further, in rough priority order:
+
+- **Actual usage from Front's existing MCP beta**: call volume by tool, which scopes
+  get exercised most, and denial/error rates, real signal on where agents are
+  already pushing against the current impersonation model.
+- **The real size of the "growing priority"**: request volume and mix behind
+  customer and partner asks to connect agents, not just that it's growing, but by
+  how much and from whom.
+- **Security and compliance precedent**: whether Front already manages any
+  non-human identity (service accounts, API keys, internal automations) the same
+  connection/scope/revocation pattern could extend, rather than inventing a new
+  model from scratch.
+- **A handful of customer and partner interviews**: what triage, draft, and trigger
+  actually mean in their workflow today, and what breaks when an agent's access is
+  tied to one teammate's OAuth grant.
+- **Legal's read on the DPA question**: whether an agent acting under a developer
+  attestation is enough, or each customer's data processing agreement needs
+  individual renegotiation.
+
 ## Personas
 
-| Role | Pain | Success state |
-|---|---|---|
-| Customer (e.g. Instructure) | Can only give an agent access by having it borrow a teammate's identity and exact permissions | Grants an agent its own scoped, named connection; sees what it did; revokes it without engineering help |
-| Partner (e.g. Aircall) | Its integration's access ceiling still depends on which teammate authorized it | Builds once against a stable scope model a customer's admin grants directly |
-| Third-party client (e.g. Claude Desktop) | Needs the same access pattern everywhere it's pointed; today's model can't give it that | Connects the same way regardless of which customer's admin grants access |
+| Role | Job to be done | Pain | Success state |
+|---|---|---|---|
+| Customer (e.g. Instructure) | When conversation volume outgrows headcount, grant an agent access to triage and draft inside my workspace, so I can hold response times without hiring | Can only give an agent access by having it borrow a teammate's identity and exact permissions | Grants an agent its own scoped, named connection; sees what it did; revokes it without engineering help |
+| Partner (e.g. Aircall) | When building a Front integration, get one scope model any admin can grant, so I can ship once instead of adapting per customer | Its integration's access ceiling still depends on which teammate authorized it | Builds once against a stable scope model a customer's admin grants directly |
+| Third-party client (e.g. Claude Desktop) | When a user points me at any Front workspace, connect the same way every time, so I need no bespoke integration per customer | Needs the same access pattern everywhere it's pointed; today's model can't give it that | Connects the same way regardless of which customer's admin grants access |
 
 "Admin" and "Support rep" below are roles a Customer's teammates play; "External
 agent" is the calling client (copilot, partner integration, or third-party client) —
@@ -104,8 +125,8 @@ connection grant it holds.
 
 ## Use cases
 
-Ranked by leverage: impact on rep throughput/response time vs. risk and effort to ship
-safely.
+Ranked by leverage: impact on Support rep throughput/response time vs. risk and
+effort to ship safely.
 
 | Rank | Use case | Leverage | Notes |
 |---|---|---|---|
@@ -115,7 +136,7 @@ safely.
 | 4 | UC-04: Agent triggers a defined workflow | Medium | Narrower applicability; a real action with consequences |
 
 - **UC-01** Agent calls `draft_reply` (needs `draft_reply` scope) → draft is created in
-  "drafted" status, visible to the assigned rep; never sent.
+  "drafted" status, visible to the assigned Support rep; never sent.
 - **UC-02** Agent calls `get_conversation` (needs `read_conversations` scope) → returns
   context, no state change; denied and logged if scope missing or connection revoked.
 - **UC-03** Agent calls `apply_tags` (needs `apply_tags` scope) → tag/routing applied
@@ -125,7 +146,7 @@ safely.
   had; any other workflow ID is denied.
 
 **Supporting use cases** (prerequisites and governance, not independently ranked):
-UC-05 admin creates a connection with chosen scopes; UC-06 rep reviews a draft and
+UC-05 admin creates a connection with chosen scopes; UC-06 Support rep reviews a draft and
 issues the send themselves (never the agent); UC-07 admin revokes a connection,
 denying all subsequent calls immediately; UC-08 admin reviews the audit log, filterable
 by connection.
@@ -150,7 +171,7 @@ expand workflow-trigger from pre-defined workflows to agent-created automation r
 | Phase | Duration | Scope | Key risk |
 |---|---|---|---|
 | P0 | 4-6 wks | Scope taxonomy, agent-connection data model, security/infra design doc | Security review stalls timeline — loop in legal/compliance from day one |
-| P1 | 8-10 wks | Connection UI, audit log, 3 MCP tools (read conversation/contact, draft reply); closed beta, 5-10 design partners | Reps ignore drafts — measure edit-distance/send-rate from day one |
+| P1 | 8-10 wks | Connection UI, audit log, 3 MCP tools (read conversation/contact, draft reply); closed beta, 5-10 design partners | Support reps ignore drafts — measure edit-distance/send-rate from day one |
 | P2 | 6-8 wks | Tag/assign and workflow-trigger tools; open beta, self-serve connections | Overly broad scope grants — default to team/inbox level, rate-limit writes |
 | P3 (GA) | n/a | Decide v1.1 autonomous-send opt-in from beta data | Pressure to fast-follow before trust is earned — gate on measured signals, not a date |
 
@@ -192,13 +213,14 @@ internal services Front's UI already uses — no second execution path.
 ```mermaid
 flowchart LR
     Agent["External Agent<br/>(Partner or Third-party client)"] -->|"MCP tool call<br/>read / draft / tag / trigger"| MCP["Front MCP Server<br/>checks the connection's scope"]
-    Rep["Human Rep"] -->|"approve & send"| Internal
+    Rep["Support Rep"] -->|"approve & send"| Internal
     MCP --> Internal["Front's internal services<br/>(same path the UI already uses)"]
     Internal --> Data[("Conversations & workflows")]
 ```
 
-Both paths end at the same internal services, but only the rep's path can produce a
-send — the structural guarantee behind the human-in-the-loop claim in Part 1.
+Both paths end at the same internal services, but only the Support rep's path can
+produce a send — the structural guarantee behind the human-in-the-loop claim in
+Part 1.
 
 ## Functional requirements
 
@@ -208,8 +230,8 @@ send — the structural guarantee behind the human-in-the-loop claim in Part 1.
   scopes is denied and logged, with no partial effect.
 - **FR-03 Draft-only tool for agents:** the reply tool only ever produces a draft
   (`ReplyDrafted` event); no agent path can send to a customer.
-- **FR-04 Human-issued send command:** only a rep's `SendReply` produces a `ReplySent`
-  event; no connection identity can appear as its sender.
+- **FR-04 Human-issued send command:** only a Support rep's `SendReply` produces a
+  `ReplySent` event; no connection identity can appear as its sender.
 - **FR-05 Audit every scoped action:** each successful scoped call writes one audit
   entry with connection, action, target, and timestamp.
 - **FR-06 One-click revocation:** revoking a connection sets it "revoked" immediately;

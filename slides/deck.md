@@ -190,7 +190,7 @@ Every connection today authenticates as a specific teammate and inherits that pe
 <table style="margin-top: 12px;">
 <tr><th>Risk</th><th>Mitigation</th></tr>
 <tr><td><strong>A scoped agent is still a meaningful blast radius</strong></td><td>Team/inbox-level default scopes, per-connection rate limits</td></tr>
-<tr><td><strong>Reps ignore drafts, adoption stalls</strong></td><td>Measure edit-distance and send-rate in beta; make accept faster than writing</td></tr>
+<tr><td><strong>Support reps ignore drafts, adoption stalls</strong></td><td>Measure edit-distance and send-rate in beta; make accept faster than writing</td></tr>
 <tr><td><strong>MCP auth patterns still stabilizing industry-wide</strong></td><td>Version the server interface from day one, track the spec's auth working group</td></tr>
 <tr><td><strong>DPAs may not contemplate a third-party agent</strong></td><td>Legal and compliance in Phase 0; developer data-handling attestation</td></tr>
 </table>
@@ -319,7 +319,7 @@ Writes go through the same command/event pipeline Front already uses for its own
 </svg>
 </div>
 
-<div style="margin-top: 6px; font-size: 0.56em; color: var(--body);">The Connection &amp; Scope Store, rate limiter, and audit log are the genuinely new pieces. Everything inside the internal platform boundary already runs today, and <strong>SendReply</strong> there is issued by a human rep, never by an agent credential.</div>
+<div style="margin-top: 6px; font-size: 0.56em; color: var(--body);">The Connection &amp; Scope Store, rate limiter, and audit log are the genuinely new pieces. Everything inside the internal platform boundary already runs today, and <strong>SendReply</strong> there is issued by a Support rep, never by an agent credential.</div>
 
 ---
 

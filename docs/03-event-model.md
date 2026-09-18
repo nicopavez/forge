@@ -16,7 +16,7 @@ immediately.
 reply. Both require the matching scope. A draft is never a message the customer
 sees, it's a `ReplyDrafted` event, nothing more.
 
-**Human Sends, Everything Logs.** A rep reviews the draft and issues `SendReply`
+**Human Sends, Everything Logs.** A Support rep reviews the draft and issues `SendReply`
 themselves, whether they send it untouched or rewrite it first. That's the only
 command in the whole model that can put a message in front of the customer, and no
 agent connection can ever issue it. Every action on this timeline, connect, revoke,

@@ -63,6 +63,6 @@ problem of autonomous customer-facing action.
 
 If admins can grant a small, fixed set of scopes to a named agent connection, see an
 audit trail of what it did, and revoke it instantly, they'll say yes to connecting a
-first agent. If a rep can accept an agent's draft in one click instead of writing a
-reply from scratch, they'll actually use it. Both are testable within a closed beta
+first agent. If a Support rep can accept an agent's draft in one click instead of
+writing a reply from scratch, they'll actually use it. Both are testable within a closed beta
 before committing to anything beyond draft-and-approve.
