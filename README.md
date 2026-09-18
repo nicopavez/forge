@@ -122,17 +122,6 @@ python .claude/skills/event-modeling/event_model.py render diagrams/event-model.
 On Windows, the render step needs `PYTHONUTF8=1` set first (the default console
 encoding chokes on a unicode character the renderer emits).
 
-## Known gaps
-
-- The event model diagrams UC-01, UC-02, and UC-05 through UC-08 (connect, read,
-  draft, send, revoke, audit). UC-03 (triage) and UC-04 (trigger workflow) are
-  described in prose as following the identical command/event/read-model pattern but
-  aren't separately modeled in the JSON/SVG.
-- Real request volume behind the brief's "growing priority," whether an
-  agent-identity fix is already planned internally at Front, and the extent of
-  Front's internal activity logging beyond what's public: all stated as open in the
-  PRD's Assumptions section rather than guessed at.
-
 ## License
 
 All original content here (this README, `docs/`, `diagrams/`, `slides/`,
