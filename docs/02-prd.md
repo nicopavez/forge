@@ -2,8 +2,7 @@
 title: External Agent Access to Front
 version: 0.4
 status: Draft for review
-owner: PM, Developer Platform
-stakeholders: Developer Platform Eng, Security & Compliance, Support Product, Design
+owner: Nico Pavez
 ---
 
 **Related:** [Opportunity brief](01-opportunity-brief.md), [event model](03-event-model.md)
