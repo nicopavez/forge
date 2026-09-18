@@ -59,6 +59,29 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 ---
 
+### Why now
+
+# Three trends outside Front
+
+<div class="row" style="margin-top: 20px;">
+  <div class="col card">
+    <div style="font-weight: 600; font-size: 0.8em; color: var(--accent);">Scale</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">Gartner: agentic AI in 40% of enterprise apps by 2026, a third of all enterprise software by 2028.</div>
+  </div>
+  <div class="col card">
+    <div style="font-weight: 600; font-size: 0.8em; color: var(--accent);">Identity is unsolved</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">Non-human identities already outnumber human ones 17x to 80x+ in the enterprise, growing roughly 40% a year.</div>
+  </div>
+  <div class="col card">
+    <div style="font-weight: 600; font-size: 0.8em; color: var(--red);">The real risk</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">40%+ of agentic AI projects get canceled by 2027 over unclear ROI or weak risk controls.</div>
+  </div>
+</div>
+
+<div style="margin-top: 16px; font-size: 0.55em; color: var(--muted);">Gartner (2025); MCP one-year retrospective, Linux Foundation Agentic AI Foundation (2025); Veza 2026 State of Identity &amp; Access Report.</div>
+
+---
+
 ### Who this is for
 
 # Three jobs, one platform decision

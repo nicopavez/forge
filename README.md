@@ -31,13 +31,14 @@ genuinely unknown from outside the company.
 - [`docs/01-opportunity-brief.md`](docs/01-opportunity-brief.md): the problem, the
   personas, and why now, in about a page.
 - [`docs/02-prd.md`](docs/02-prd.md): the PRD, following the brief's own three parts.
-  Part 1 (Problem Formulation): abstract, problem statement, personas, a domain
-  glossary, use cases (UC-01...) ranked by a stated leverage metric. Part 2 (Solution
-  Definition): MVP vs. roadmap, phases with risk and mitigation per phase,
-  dependencies, out of scope vs. non-goals, four success metrics. Part 3 (Technical
-  Implications): a communication diagram, functional and non-functional requirements
-  (FR-01...), technical trade-offs, and the hardest assumption. A decision log closes
-  it out.
+  Part 1 (Problem Formulation): abstract, industry context (sourced market data on
+  agentic AI adoption and non-human identity governance), problem statement,
+  personas, a domain glossary, use cases (UC-01...) ranked by a stated leverage
+  metric. Part 2 (Solution Definition): MVP vs. roadmap, phases with risk and
+  mitigation per phase, dependencies, out of scope vs. non-goals, four success
+  metrics. Part 3 (Technical Implications): a communication diagram, functional and
+  non-functional requirements (FR-01...), technical trade-offs, and the hardest
+  assumption. A decision log closes it out.
 - [`docs/03-event-model.md`](docs/03-event-model.md) and
   [`diagrams/event-model.svg`](diagrams/event-model.svg): the mechanism behind the
   PRD's central claim, that an agent can read and draft but only a human can send,

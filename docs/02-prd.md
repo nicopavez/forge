@@ -23,29 +23,71 @@ Front's internal activity logging beyond what's public.
 
 ## Abstract
 
-Front's Developer Platform is opening up to external AI agents, customer-built
-copilots, partner integrations, third-party agent frameworks, that read Front context
-and take action through Front's existing MCP server. That server has real OAuth and
-scopes, but no identity for the agent itself: every connection borrows a specific
-teammate's exact permissions. That's a permissions problem for the customer, a
-fragility problem for the partner, and a portability problem for the third-party
-client. This PRD proposes a first-class agent connection: an admin-granted principal
-with its own scopes, its own audit trail, and one-click revocation, with the send step
-held back for a human in every case. It starts narrow, read and draft only, and earns
-the case for autonomy later with real usage data.
+Front runs the shared inbox where support and sales teams handle every customer
+conversation, and its Developer Platform bets that inbox becomes somewhere AI agents
+work too, not just humans. Its MCP server already lets external agents,
+customer-built copilots, partner integrations, third-party agent frameworks, read
+Front context and act with real OAuth and scopes. What it doesn't have is an
+identity for the agent itself: every connection borrows a specific teammate's exact
+permissions.
+
+That gap surfaces three ways:
+
+- **Customer**: the only lever an admin has is whose OAuth grant an agent rides on,
+  not what the agent itself may do.
+- **Partner**: an integration's access ceiling moves with the authorizing teammate's
+  role, and breaks if that person leaves.
+- **Third-party client**: needs one access pattern that works identically everywhere
+  it's installed; a model built around one teammate's identity can't give it that.
+
+This PRD proposes a first-class agent connection: an admin-granted principal with its
+own scopes, its own audit trail, and one-click revocation, with the send step held
+back for a human in every case. It starts narrow, read and draft only, and earns the
+case for autonomy later with real usage data.
+
+## Industry context
+
+Three trends outside Front make this a now-problem, not a someday one:
+
+- **Scale.** Gartner projects task-specific AI agents in 40% of enterprise apps by
+  2026, up from under 5% in 2025, and agentic AI in a third of all enterprise
+  software by 2028. MCP itself went from an Anthropic-only spec to Linux Foundation
+  infrastructure backed by OpenAI, Google, and Microsoft within about a year. This
+  isn't an early-adopter request, it's the industry's direction.
+- **Identity is the unsolved part.** Recent enterprise surveys put non-human
+  identities, service accounts, API keys, agents, anywhere from 17x to 80x+ human
+  identities, growing roughly 40% a year, most of it ungoverned. Front's
+  agents-borrow-a-teammate's-identity pattern is one fixable instance of that same
+  industry-wide gap.
+- **The real risk is skipping the gate, not moving slowly.** Gartner also predicts
+  over 40% of agentic AI projects will be canceled by 2027 over unclear ROI or
+  inadequate risk controls, the exact failure mode a human-gated, audited, revocable
+  connection is built to avoid.
+
+Sources: [Gartner, task-specific agents in enterprise apps by
+2026](https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025);
+[MCP one-year retrospective](https://blog.modelcontextprotocol.io/posts/2025-11-25-first-mcp-anniversary/);
+[Veza, 2026 State of Identity & Access Report](https://veza.com/resources/the-state-of-identity-access-2026/);
+[Gartner, agentic AI project cancellations by 2027](https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027).
 
 ## Problem statement
 
 Front's MCP server already supports OAuth 2.1 with real read, write, and send scopes
-enforced at the tool level, but every connection authenticates as a specific Front
-teammate and inherits that person's exact permissions. There's no identity for the
-agent itself, only the identity of whoever authorized it: an admin can't grant an
-agent narrower access than that person already has, can't manage it as its own object,
-and any activity record shows the authorizing teammate rather than the agent. As a
-result, access drifts with the authorizing teammate's role and breaks if they leave;
-security and compliance can't assess or revoke an agent's access without touching a
-human's own OAuth grant; and every customer asking to connect an agent today either
-accepts that coupling or waits.
+enforced at the tool level. But every connection authenticates as a specific Front
+teammate and inherits that person's exact permissions; there's no identity for the
+agent itself, only the identity of whoever authorized it.
+
+That has three consequences:
+
+- An admin can't grant an agent narrower access than that person already has, or
+  manage it as its own object.
+- Any activity record shows the authorizing teammate, not the agent, so access
+  drifts with that person's role and breaks if they leave.
+- Security and compliance can't assess or revoke an agent's access without touching
+  a human's own OAuth grant.
+
+Every customer asking to connect an agent today either accepts that coupling or
+waits.
 
 ## Personas
 
@@ -210,11 +252,8 @@ launch, and customers won't push to skip it. If they do, the permission/audit la
 is already robust enough that v1.1 becomes a scope-and-policy change, not a
 re-architecture.
 
-Other assumptions: admins manage connections without added tooling beyond this PRD's
-UI; existing customer DPAs can accommodate an agent under an attestation, not a full
-renegotiation.
-
-Constraints: must build on Front's existing MCP OAuth infrastructure, not replace it;
-writes go through the existing internal command/event pipeline, no second execution
-path; MCP's own auth patterns are still stabilizing industry-wide, limiting how much
-can be locked in now versus versioned later.
+Constraints: builds on Front's existing MCP OAuth infrastructure, not a replacement;
+writes stay on the existing internal command/event pipeline; existing customer DPAs
+can accommodate an agent under an attestation, not a full renegotiation; MCP's own
+auth patterns are still stabilizing industry-wide, limiting what gets locked in now
+versus versioned later.
