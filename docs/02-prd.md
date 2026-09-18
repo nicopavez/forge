@@ -90,7 +90,7 @@ What I'd want before committing further, in rough priority order:
 | Input | Metric tracked | Data source |
 |---|---|---|
 | MCP beta usage | Calls by tool; scope usage mix; denial and error rate | MCP server request logs, API gateway analytics |
-| Size of the "growing priority" | Agent-connection requests per quarter, by customer and partner | Support tickets, CRM notes, partner program inbound |
+| Size of the "growing priority" | Agent-connection requests per quarter, and how many stalled or were lost in security review | Support tickets, CRM notes, security review records |
 | Support rep baseline | Median first-response time; conversations per rep per day | Front's own analytics |
 | Security precedent | Non-human identities in use today, and how each is scoped and revoked | Internal auth service inventory, security team |
 | Customer and partner interviews | Top jobs and blockers; willingness to grant scoped access (8-10 interviews) | Customer success and partner managers |
@@ -191,9 +191,10 @@ cross-tenant access; any non-MCP transport.
 
 <img src="../diagrams/success-metrics-chart.svg" alt="Adoption and revenue from existing customers over 12 months after launch. Placeholder numbers, not a forecast." width="70%">
 
-**Hypothesis:** customers that connect an agent handle more conversations per Support
-rep, so they buy more seats and make more API calls. Their spending rises about 3
-months after they connect, so the revenue line climbs after the adoption line. An
+**Hypothesis:** customers already want agents, but security teams stall connections
+that borrow a teammate's identity. A scoped, revocable connection removes that
+blocker, so more workspaces connect, then make more API calls and buy more seats
+about 3 months later. The gap between the lines is only the demand blocked today. An
 index of 140 means 40% more revenue than in the launch month. All numbers are
 placeholders until beta data replaces them.
 

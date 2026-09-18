@@ -89,7 +89,7 @@ Every connection today authenticates as a specific teammate and inherits that pe
 <table style="margin-top: 12px;">
 <tr><th>Input</th><th>Metric tracked</th><th>Data source</th></tr>
 <tr><td><strong>MCP beta usage</strong></td><td>Calls by tool; scope mix; denial and error rate</td><td>MCP server logs, API gateway</td></tr>
-<tr><td><strong>Size of the "growing priority"</strong></td><td>Agent-connection requests per quarter</td><td>Support tickets, CRM, partner inbound</td></tr>
+<tr><td><strong>Size of the "growing priority"</strong></td><td>Agent-connection requests per quarter, and how many stalled on security</td><td>Support tickets, CRM, security reviews</td></tr>
 <tr><td><strong>Support rep baseline</strong></td><td>First-response time; conversations per rep per day</td><td>Front's own analytics</td></tr>
 <tr><td><strong>Security precedent</strong></td><td>Non-human identities today, and how each is scoped and revoked</td><td>Auth service inventory, security team</td></tr>
 <tr><td><strong>Interviews</strong></td><td>Top jobs and blockers (8-10 interviews)</td><td>Customer success, partner managers</td></tr>
@@ -244,9 +244,9 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 # Adoption first, revenue later
 
-<div style="margin-top: 4px;"><img src="../diagrams/success-metrics-chart-dark.svg" style="width: 80%;"></div>
+<div style="margin-top: 4px;"><img src="../diagrams/success-metrics-chart-dark.svg" style="width: 75%;"></div>
 
-<div style="margin-top: 8px; font-size: 0.6em; color: var(--body); max-width: 900px;"><strong>Hypothesis:</strong> customers that connect an agent handle more conversations per Support rep, so they buy more seats and make more API calls. Their spending rises about 3 months after they connect, so the revenue line climbs after the adoption line. An index of 140 means 40% more revenue than in the launch month. All numbers are placeholders until beta data replaces them.</div>
+<div style="margin-top: 8px; font-size: 0.6em; color: var(--body); max-width: 900px;"><strong>Hypothesis:</strong> customers already want agents, but security teams stall connections that borrow a teammate's identity. A scoped, revocable connection removes that blocker, so more workspaces connect, then make more API calls and buy more seats about 3 months later. The gap between the lines is only the demand blocked today. An index of 140 means 40% more revenue than in the launch month. All numbers are placeholders until beta data replaces them.</div>
 
 ---
 
