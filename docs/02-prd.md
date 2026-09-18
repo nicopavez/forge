@@ -170,10 +170,13 @@ expand workflow-trigger from pre-defined workflows to agent-created automation r
 
 | Phase | Duration | Scope | Key risk |
 |---|---|---|---|
-| P0 | 4-6 wks | Scope taxonomy, agent-connection data model, security/infra design doc | Security review stalls timeline — loop in legal/compliance from day one |
-| P1 | 8-10 wks | Connection UI, audit log, 3 MCP tools (read conversation/contact, draft reply); closed beta, 5-10 design partners | Support reps ignore drafts — measure edit-distance/send-rate from day one |
-| P2 | 6-8 wks | Tag/assign and workflow-trigger tools; open beta, self-serve connections | Overly broad scope grants — default to team/inbox level, rate-limit writes |
+| P0 | 1-2 wks | Scope taxonomy, agent-connection data model, security/infra design doc | Security review stalls timeline — loop in legal/compliance from day one |
+| P1 | 4-6 wks | Connection UI, audit log, 3 MCP tools (read conversation/contact, draft reply); closed beta, 5-10 design partners | Support reps ignore drafts — measure edit-distance/send-rate from day one |
+| P2 | 3-4 wks | Tag/assign and workflow-trigger tools; open beta, self-serve connections | Overly broad scope grants — default to team/inbox level, rate-limit writes |
 | P3 (GA) | n/a | Decide v1.1 autonomous-send opt-in from beta data | Pressure to fast-follow before trust is earned — gate on measured signals, not a date |
+
+Engineering time is short with AI-assisted development. Security review, legal, and
+design-partner feedback don't compress, so each phase is gated on those, not on build.
 
 **Dependencies:** security/compliance sign-off on the agent-as-sub-processor question
 (High risk); Front's core authorization service supporting a new principal type (High);
