@@ -24,7 +24,9 @@ identity can't give them that.
 ## Why now
 
 MCP is becoming the default way agent frameworks expect to connect to external
-systems, and Front's server already has real beta traction. The identity gap won't
+systems, backed by OpenAI, Google, and Microsoft through the Linux Foundation.
+Gartner projects task-specific AI agents in 40% of enterprise apps by 2026. The
+identity gap won't
 get easier to fix later: the more agents get wired up against individual teammates'
 OAuth grants, the more that pattern hardens into the default, and the harder it
 becomes to introduce a proper agent principal without breaking existing connections.

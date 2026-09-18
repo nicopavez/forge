@@ -38,27 +38,6 @@ footer: ''
 
 ---
 
-### The problem
-
-# Agents borrow a teammate's identity, not their own
-
-<div class="row" style="margin-top: 24px;">
-  <div class="col card">
-    <div style="color: var(--accent); font-weight: 600; font-size: 0.85em;">What exists</div>
-    <div style="font-size: 0.75em; margin-top: 8px; color: var(--body);">OAuth-based access with real read, write, and send scopes at the tool level.</div>
-  </div>
-  <div class="col card">
-    <div style="color: var(--red); font-weight: 600; font-size: 0.85em;">What's missing</div>
-    <div style="font-size: 0.75em; margin-top: 8px; color: var(--body);">An identity for the agent itself, distinct from the teammate it's impersonating.</div>
-  </div>
-</div>
-
-<div style="margin-top: 20px; font-size: 0.75em; color: var(--body);">
-Every connection today authenticates as a specific teammate and inherits that person's exact permissions. There's no admin-managed way to grant an agent its own narrower, revocable access, and any activity record shows the teammate, not whether the agent or the person actually acted.
-</div>
-
----
-
 ### Why now
 
 # Three trends outside Front
@@ -82,6 +61,43 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 ---
 
+### The problem
+
+# Agents borrow a teammate's identity, not their own
+
+<div class="row" style="margin-top: 24px;">
+  <div class="col card">
+    <div style="color: var(--accent); font-weight: 600; font-size: 0.85em;">What exists</div>
+    <div style="font-size: 0.75em; margin-top: 8px; color: var(--body);">OAuth-based access with real read, write, and send scopes at the tool level.</div>
+  </div>
+  <div class="col card">
+    <div style="color: var(--red); font-weight: 600; font-size: 0.85em;">What's missing</div>
+    <div style="font-size: 0.75em; margin-top: 8px; color: var(--body);">An identity for the agent itself, distinct from the teammate it's impersonating.</div>
+  </div>
+</div>
+
+<div style="margin-top: 20px; font-size: 0.75em; color: var(--body);">
+Every connection today authenticates as a specific teammate and inherits that person's exact permissions. There's no admin-managed way to grant an agent its own narrower, revocable access, and any activity record shows the teammate, not whether the agent or the person actually acted.
+</div>
+
+---
+
+### Inputs and data points
+
+# What I'd look at first
+
+<table style="margin-top: 12px;">
+<tr><th>Input</th><th>Metric tracked</th><th>Data source</th></tr>
+<tr><td><strong>MCP beta usage</strong></td><td>Calls by tool; scope mix; denial and error rate</td><td>MCP server logs, API gateway</td></tr>
+<tr><td><strong>Size of the "growing priority"</strong></td><td>Agent-connection requests per quarter</td><td>Support tickets, CRM, partner inbound</td></tr>
+<tr><td><strong>Support rep baseline</strong></td><td>First-response time; conversations per rep per day</td><td>Front's own analytics</td></tr>
+<tr><td><strong>Security precedent</strong></td><td>Non-human identities today, and how each is scoped and revoked</td><td>Auth service inventory, security team</td></tr>
+<tr><td><strong>Interviews</strong></td><td>Top jobs and blockers (8-10 interviews)</td><td>Customer success, partner managers</td></tr>
+<tr><td><strong>DPA coverage</strong></td><td>Share of contracts covering an agent; days to clear</td><td>Legal contract repository</td></tr>
+</table>
+
+---
+
 ### Who this is for
 
 # Three jobs, one platform decision
@@ -89,15 +105,15 @@ Every connection today authenticates as a specific teammate and inherits that pe
 <div class="row" style="margin-top: 20px;">
   <div class="col card">
     <div style="font-weight: 600; font-size: 0.8em;">Customer <span style="color: var(--muted); font-weight: 200;">(Instructure)</span></div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">Grant only the access an agent needs. See what it did. Revoke it without engineering help.</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">When conversation volume outgrows headcount, let an agent triage and draft in my workspace, so I hold response times without hiring.</div>
   </div>
   <div class="col card">
     <div style="font-weight: 600; font-size: 0.8em;">Partner <span style="color: var(--muted); font-weight: 200;">(Aircall)</span></div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">One scope model a customer's admin grants directly, not one tied to whichever teammate authorized it.</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">When I build a Front integration, use one scope model any admin can grant, so I ship once instead of adapting per customer.</div>
   </div>
   <div class="col card">
     <div style="font-weight: 600; font-size: 0.8em;">Third-party client <span style="color: var(--muted); font-weight: 200;">(Claude Desktop)</span></div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">The same access pattern, working identically at every customer that installs it.</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px;">When a user points me at any Front workspace, connect the same way every time, so I need no bespoke integration per customer.</div>
   </div>
 </div>
 
@@ -116,33 +132,6 @@ Every connection today authenticates as a specific teammate and inherits that pe
 <tr><td><strong>Triage / classify</strong></td><td>Medium, recoverable</td><td>Value compounds at volume</td></tr>
 <tr><td><strong>Trigger a defined workflow</strong></td><td>Medium, scoped</td><td>Reuses automation Front already trusts</td></tr>
 </table>
-
----
-
-### Out of scope, and non-goals
-
-# What's deferred, and what's permanent
-
-<div class="row" style="margin-top: 16px;">
-  <div class="col card">
-    <div style="color: var(--yellow); font-weight: 600; font-size: 0.8em;">Not now (deferred)</div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px; line-height: 1.8;">
-    Autonomous send<br>
-    Partner marketplace or directory<br>
-    SDKs beyond raw MCP tool calls
-    </div>
-  </div>
-  <div class="col card">
-    <div style="color: var(--red); font-weight: 600; font-size: 0.8em;">Not ever (non-goals)</div>
-    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px; line-height: 1.8;">
-    Self-expanding scopes<br>
-    Cross-workspace or cross-tenant access<br>
-    A non-MCP transport
-    </div>
-  </div>
-</div>
-
-<div style="margin-top: 16px; font-size: 0.6em; color: var(--muted);">Each deferred item has a real revisit trigger tied to beta data, not a fixed date. Non-goals would undermine the safety model itself, not just add scope to it.</div>
 
 ---
 
@@ -197,6 +186,33 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 ---
 
+### Out of scope, and non-goals
+
+# What's deferred, and what's permanent
+
+<div class="row" style="margin-top: 16px;">
+  <div class="col card">
+    <div style="color: var(--yellow); font-weight: 600; font-size: 0.8em;">Not now (deferred)</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px; line-height: 1.8;">
+    Autonomous send<br>
+    Partner marketplace or directory<br>
+    SDKs beyond raw MCP tool calls
+    </div>
+  </div>
+  <div class="col card">
+    <div style="color: var(--red); font-weight: 600; font-size: 0.8em;">Not ever (non-goals)</div>
+    <div style="font-size: 0.68em; color: var(--body); margin-top: 10px; line-height: 1.8;">
+    Self-expanding scopes<br>
+    Cross-workspace or cross-tenant access<br>
+    A non-MCP transport
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 16px; font-size: 0.6em; color: var(--muted);">Each deferred item has a real revisit trigger tied to beta data, not a fixed date. Non-goals would undermine the safety model itself, not just add scope to it.</div>
+
+---
+
 ### Success metrics
 
 # Four, matching the brief's own categories
@@ -224,6 +240,16 @@ Every connection today authenticates as a specific teammate and inherits that pe
 
 ---
 
+### Business impact
+
+# Adoption first, revenue later
+
+<div style="margin-top: 4px;"><img src="../diagrams/success-metrics-chart-dark.svg" style="width: 80%;"></div>
+
+<div style="margin-top: 8px; font-size: 0.6em; color: var(--body); max-width: 900px;"><strong>Hypothesis:</strong> customers that connect an agent handle more conversations per Support rep, so they buy more seats and make more API calls. Their spending rises about 3 months after they connect, so the revenue line climbs after the adoption line. An index of 140 means 40% more revenue than in the launch month. All numbers are placeholders until beta data replaces them.</div>
+
+---
+
 ### How it communicates
 
 # MCP as the door, not a new house
@@ -246,7 +272,7 @@ Writes go through the same command/event pipeline Front already uses for its own
 
 ### Technical implementation
 
-# Three trust zones, one execution path
+# Three trust zones, one path
 
 <div class="card" style="margin-top: 6px; padding: 8px;">
 <svg viewBox="0 0 1160 380" style="width: 100%; height: auto; display: block; max-height: 380px;">

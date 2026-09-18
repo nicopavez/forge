@@ -30,22 +30,24 @@ genuinely unknown from outside the company.
 
 - [`docs/01-opportunity-brief.md`](docs/01-opportunity-brief.md): the problem, the
   personas, and why now, in about a page.
-- [`docs/02-prd.md`](docs/02-prd.md): the PRD, following the brief's own three parts.
-  Part 1 (Problem Formulation): abstract, industry context (sourced market data on
-  agentic AI adoption and non-human identity governance), problem statement,
-  personas, a domain glossary, use cases (UC-01...) ranked by a stated leverage
-  metric. Part 2 (Solution Definition): MVP vs. roadmap, phases with risk and
-  mitigation per phase, dependencies, out of scope vs. non-goals, four success
-  metrics. Part 3 (Technical Implications): a communication diagram, functional and
-  non-functional requirements (FR-01...), technical trade-offs, and the hardest
-  assumption. A decision log closes it out.
+- [`docs/02-prd.md`](docs/02-prd.md) (PDF: [`02-prd.pdf`](docs/02-prd.pdf), 5 pages):
+  the PRD, following the prompt's own three parts. Part 1 (Problem Formulation):
+  abstract, industry context (sourced market data on agentic AI adoption and
+  non-human identity governance), problem statement, inputs and data points (each
+  with the metric tracked and its data source), personas with a job to be done,
+  and use cases (UC-01...) ranked by a stated leverage metric. Part 2 (Solution
+  Definition): MVP vs. roadmap, phases with risk per phase, dependencies, out of
+  scope vs. non-goals, four success metrics with a chart tying adoption to revenue
+  (placeholder numbers). Part 3 (Technical Implications): a communication diagram,
+  functional and non-functional requirements (FR-01...), technical trade-offs, and
+  the hardest assumption.
 - [`docs/03-event-model.md`](docs/03-event-model.md) and
   [`diagrams/event-model.svg`](diagrams/event-model.svg): the mechanism behind the
   PRD's central claim, that an agent can read and draft but only a human can send,
   modeled as commands, events, and read models rather than asserted in prose.
 - [`slides/deck.md`](slides/deck.md) (rendered: [`deck.html`](slides/deck.html),
-  [`deck.pdf`](slides/deck.pdf)): a 12-slide walkthrough of the PRD, built for a live
-  20-minute session with a tech lead and two PMs.
+  [`deck.pdf`](slides/deck.pdf)): a 17-slide walkthrough of the PRD in the PRD's own
+  order, built for a live 20-minute session with a tech lead and two PMs.
 - [`mockups/index.html`](mockups/index.html): four B&W wireframes of the MVP flow,
   connecting an agent, the developer consent screen, an agent-drafted reply awaiting
   approval, and the audit log.
@@ -73,10 +75,13 @@ forge/
 ├── docs/
 │   ├── 01-opportunity-brief.md   # problem, personas, why now
 │   ├── 02-prd.md                 # the PRD, the main deliverable
+│   ├── 02-prd.pdf                # 5-page PDF of the PRD
 │   └── 03-event-model.md         # narrates the event model diagram
 ├── diagrams/
 │   ├── event-model.json          # validated source (Pydantic schema)
-│   └── event-model.svg           # rendered diagram
+│   ├── event-model.svg           # rendered diagram
+│   ├── communication-flow.svg    # PRD Part 3 flowchart, pre-rendered for the PDF
+│   └── success-metrics-chart*.svg # PRD success-metrics chart (light, and dark for the deck)
 ├── slides/
 │   ├── deck.md                   # Marp source
 │   ├── deck.html
@@ -112,7 +117,7 @@ blank prompt, copied into [`.claude/skills/`](.claude/skills/) and credited in
 ```bash
 cd slides
 npx @marp-team/marp-cli deck.md --html --allow-local-files -o deck.html
-npx @marp-team/marp-cli deck.md --pdf --allow-local-files -o deck.pdf
+npx @marp-team/marp-cli deck.md --pdf --html --allow-local-files -o deck.pdf
 ```
 
 **Re-validate the event model:**

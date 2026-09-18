@@ -7,9 +7,6 @@ owner: Nico Pavez
 
 **Related:** [Opportunity brief](01-opportunity-brief.md), [event model](03-event-model.md)
 
-This follows the brief's own three parts: Problem Formulation, Solution Definition,
-Technical Implications.
-
 ## Assumptions
 
 Written from outside Front, using its public MCP developer documentation
@@ -86,29 +83,18 @@ That has three consequences:
 - Security and compliance can't assess or revoke an agent's access without touching
   a human's own OAuth grant.
 
-Every customer asking to connect an agent today either accepts that coupling or
-waits.
-
 ## Inputs and data points
 
 What I'd want before committing further, in rough priority order:
 
-- **Actual usage from Front's existing MCP beta**: call volume by tool, which scopes
-  get exercised most, and denial/error rates, real signal on where agents are
-  already pushing against the current impersonation model.
-- **The real size of the "growing priority"**: request volume and mix behind
-  customer and partner asks to connect agents, not just that it's growing, but by
-  how much and from whom.
-- **Security and compliance precedent**: whether Front already manages any
-  non-human identity (service accounts, API keys, internal automations) the same
-  connection/scope/revocation pattern could extend, rather than inventing a new
-  model from scratch.
-- **A handful of customer and partner interviews**: what triage, draft, and trigger
-  actually mean in their workflow today, and what breaks when an agent's access is
-  tied to one teammate's OAuth grant.
-- **Legal's read on the DPA question**: whether an agent acting under a developer
-  attestation is enough, or each customer's data processing agreement needs
-  individual renegotiation.
+| Input | Metric tracked | Data source |
+|---|---|---|
+| MCP beta usage | Calls by tool; scope usage mix; denial and error rate | MCP server request logs, API gateway analytics |
+| Size of the "growing priority" | Agent-connection requests per quarter, by customer and partner | Support tickets, CRM notes, partner program inbound |
+| Support rep baseline | Median first-response time; conversations per rep per day | Front's own analytics |
+| Security precedent | Non-human identities in use today, and how each is scoped and revoked | Internal auth service inventory, security team |
+| Customer and partner interviews | Top jobs and blockers; willingness to grant scoped access (8-10 interviews) | Customer success and partner managers |
+| DPA coverage | Share of contracts that cover an agent as a sub-processor; days to clear | Legal contract repository |
 
 ## Personas
 
@@ -175,8 +161,7 @@ expand workflow-trigger from pre-defined workflows to agent-created automation r
 | P2 | 3-4 wks | Tag/assign and workflow-trigger tools; open beta, self-serve connections | Overly broad scope grants — default to team/inbox level, rate-limit writes |
 | P3 (GA) | n/a | Decide v1.1 autonomous-send opt-in from beta data | Pressure to fast-follow before trust is earned — gate on measured signals, not a date |
 
-Engineering time is short with AI-assisted development. Security review, legal, and
-design-partner feedback don't compress, so each phase is gated on those, not on build.
+Build is fast with AI assistance. Security review, legal, and partner feedback don't compress, so phases gate on those.
 
 **Dependencies:** security/compliance sign-off on the agent-as-sub-processor question
 (High risk); Front's core authorization service supporting a new principal type (High);
@@ -203,6 +188,15 @@ cross-tenant access; any non-MCP transport.
 | Time to first integration | Median under 30 min, credentials to first sandbox call | End of Phase 1 beta |
 | Developer satisfaction | 8/10+ on scope-model clarity (post-beta survey) | End of Phase 1 beta |
 | Reliability | 99.9% MCP availability; P95 tool-call latency under 500ms | GA |
+
+<img src="../diagrams/success-metrics-chart.svg" alt="Adoption and revenue from existing customers over 12 months after launch. Placeholder numbers, not a forecast." width="70%">
+
+**Hypothesis:** customers that connect an agent handle more conversations per Support
+rep, so they buy more seats and make more API calls. Their spending rises about 3
+months after they connect, so the revenue line climbs after the adoption line. An
+index of 140 means 40% more revenue than in the launch month. All numbers are
+placeholders until beta data replaces them.
+
 
 # Part 3: Technical Implications
 
